@@ -6,23 +6,26 @@ _**Sh**it **i** **b**ui**l**t **a** **t**h**i**ng_
 ## Table of Contents
 
 * [Server Requirements](#system-requirements)
-    * [Docker Setup](#docker-setup)
+  * [Docker Setup](#docker-setup)
 * [Application Structure](#application-structure)
 * [Application Configuration](\configuration)
+  * [Application Dispatch](#application-dispatch)
 * [The Service Container](#the-service-container)
-    * [Service Providers](#the-service-provider)
-    * [Swapping Services](#swapping-services)
+  * [Service Providers](#service-providers)
+  * [Swapping Services](#swapping-services)
 * [Services Provided](#services-provided)
-    * [Logging Service](#log)
-    * [Database Service](#database)
-    * [Route Service](#route)
-    * [Session Service](#session)
-    * [View Service](#view)
-* [Extensions](#validation)
-    * [View Extensions](#view)
+  * [Logging Service](#log)
+  * [Database Service](#database)
+  * [Route Service](#route)
+  * [Session Service](#session)
+  * [View Service](#view)
+* [Extensions](#extensions)
+  * [Asset Extension](#asset-extension)
+  * [Dotenv Extension](#dotenv-extension)
+  * [Session Extension](#session-extension)
 * [Controllers](#controllers)
-    * [The Base Controller](#the-base-controller)
-    * [Writing Controllers](#the-base-controller)
+  * [The Base Controller](#the-base-controller)
+  * [Writing Controllers](#the-base-controller)
 
 ## Server Requirements
 
@@ -61,6 +64,78 @@ _**Sh**it **i** **b**ui**l**t **a** **t**h**i**ng_
 ├── composer.json                      # Composer PHP dependencies
 ```
 
+## Application Configuration
+
+Shiblati is bootstrapped through `config/bootstrap.php`. When you start a shiblati project,
+a standard "default" bootstrapping file will be published to your project's `config/`
+directory.
+
+This is a typical shiblati project bootstrapping file at published at `config/bootstrap.php`:
+
+```php
+<?php
+
+// We start by auto-loading our framework classes 
+require_once __DIR__.'/../vendor/autoload.php';
+
+// Then, we load our application envirionment variables
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+// You must create a new container to bind your application services
+// and make them accessible through dependency injection.
+$app = new Shiblati\Framework\Container();
+
+// here you can define your application service providers, you can either
+// use the default ones provided, or you can use your own, you can also add
+// as many custom services to the container as you like!
+$app->register(new Shiblati\Framework\Providers\LogServiceProvider());
+$app->register(new Shiblati\Framework\Providers\DatabaseServiceProvider());
+$app->register(new Shiblati\Framework\Providers\RouteServiceProvider());
+$app->register(new Shiblati\Framework\Providers\SessionServiceProvider());
+$app->register(new Shiblati\Framework\Providers\ViewServiceProvider());
+
+// This is a global dependency resolver function provided with the
+// default bootstrapping file, using this function, you can retrieve
+// any application services that are defined in your container, from
+// anywhere across the application, for example, to retrieve the
+// logging service: app('log')->debug('..')
+function app($dependency = null): mixed
+{
+    global $app;
+
+    return $app->offsetExists($dependency)
+        ? $app->offsetGet($dependency)
+        : false;
+}
+
+// We could define our controllers and routes entirely in this file,
+// but let's define them separately and include them for improved
+// readability.
+require_once __DIR__.'/../config/controllers.php';
+require_once __DIR__.'/../config/routes.php';
+
+// Shiblati also comes with a default execption handler, however,
+// you are free to replace it and/or add your own.
+new Shiblati\Framework\Handlers\ExceptionHandler($app);
+
+```
+
+### Application Dispatch
+
+Shiblati applications are instantiated through `public/index.php`.
+
+First, it retrieves the bootstrapping file which contains our bootstrapped application,
+then, it retrieves our application router from the container and dispatch the listener
+for requests.
+
+```php
+require_once __DIR__.'/../config/bootstrap.php';
+
+/** @var \Shiblati\Framework\Container $app */
+$app['router']->dispatch();
+```
+
 ## The Service Container
 
 Shiblati uses a [service container](https://github.com/silexphp/Pimple) to manage all of its dependencies. A service
@@ -82,7 +157,6 @@ $app->register(new Shiblati\Framework\Providers\RouteServiceProvider());
 $app->register(new Shiblati\Framework\Providers\SessionServiceProvider());
 $app->register(new Shiblati\Framework\Providers\ViewServiceProvider());
 ```
-
 
 ### Service Providers
 Shiblati's [service providers](https://github.com/silexphp/Pimple#extending-a-container) are responsible for defining
@@ -220,6 +294,67 @@ You can view the default implementation [here](https://github.com/chrisrowles/ro
 Shiblati's default view templating engine is [Twig](#). The framework also comes with some handy extensions, which
 you can learn more about [here](#).
 
+## Extensions
+
+Shiblati ships with a few extensions that integrate with its default view service provider for Twig. If you don't want
+to use Twig, then you don't need to worry about this section.
+
+### Asset Extension
+
+**Shiblati\Framework\Extensions\Twig\AssetExtension**
+
+This is an asset path resolver extension that handles resolving paths to frontend assets. It can be used in Twig
+templates like so:
+
+For CSS
+```php
+<link rel="stylesheet" href="{{ asset({file: 'rowles.bundle.css'}) }}">
+```
+
+For Images
+```php
+<img src="{{ asset({file: 'hero.svg'}) }}"/>
+```
+
+For scripts
+```php
+<script defer src="{{ asset({file: 'rowles.bundle.js'}) }}"></script>
+```
+
+Note that in the example above there is no file path, only a file name. Shiblati will automatically resolve different
+extensions based on the following convention:
+
+- scripts: `public/js`
+- styles: `public/css`
+- images `public/images`
+
+If your assets folder is structured differently, you can simply just pass the file path relative to your document
+root.
+
+### Dotenv Extension
+
+**Shiblati\Framework\Extensions\Twig\DotEnvExtension**
+
+This extension provides easy access to environment variables in your twig templates.
+
+For example:
+
+```php
+<h1>{{ env.app_name }}</h1>
+```
+
+### Session Extension
+
+**Shiblati\Framework\Extensions\Twig\DotEnvExtension**
+
+This extension provides easy access to user-accessible session data in your twig templates.
+
+For example:
+
+```php
+<h1>Welcome back, {{ session.user.name }}</h1>
+```
+
 ## Controllers
 
 Shiblati follows the [MVC](https://developer.mozilla.org/en-US/docs/Glossary/MVC) pattern of development.
@@ -247,9 +382,9 @@ public function __construct(Shiblati\Framework\Container $container)
 }
 ```
 
-The base controller retrieves application services from the container and assigns them for use. It then sets the default
-view data array's title which is used for changing the document title in views, before finally calling `time()`, which
-is a method used for session expiry.
+The base controller retrieves application services from the container and assigns them for use. It then sets the
+default view data array's title which is used for changing the document title in views, before finally calling
+`time()`, which is a method used for session expiry.
 
 ```php
 public function time() {
@@ -312,15 +447,15 @@ configurable.
 In addition to fetching service implementations for use throughout all controllers, you can fine-tune which services
 you need by registering them in extending classes only instead. You can learn more about this in the section [below](#).
 
-Finally, the base controller provides three methods for managing view template rendering, again, all of these methods can
-be overridden or disregarded completely to better suit your needs:
+Finally, the base controller provides three methods for managing view template rendering, again, all of these methods
+can be overridden or disregarded completely to better suit your needs:
 
 **render(string $template)**
 
 This method fetches the view template, automatically resolving the path relative to the root views directory which is
 defined in the default view service provider. If your backend is structured as an API, then you don't need to worry
-about this method. If you're using a custom view service provider, simply override this method to call the method defined
-in your view service implementation. For example:
+about this method. If you're using a custom view service provider, simply override this method to call the method
+defined in your view service implementation. For example:
 
 ```php
   protected function render(string $template): mixed
@@ -334,9 +469,9 @@ in your view service implementation. For example:
 
 **getTemplate(string $template)**
 
-This method is used by the method above to resolve the view file and return it to `render`. If your backend is structured
-as an API, then you don't need to worry about this method. If you're using a custom view service provider, simply override
-this method to resolve your custom view extensions. For example, if you wanted to use Vue instead:
+This method is used by the method above to resolve the view file and return it to `render`. If your backend is
+structured  as an API, then you don't need to worry about this method. If you're using a custom view service provider,
+simply override  this method to resolve your custom view extensions. For example, if you wanted to use Vue instead:
 
 ```php
 public function getTemplate(string $template): string
@@ -352,8 +487,8 @@ public function getTemplate(string $template): string
 **setViewData(array $data = [])**
 
 This method sets the data to be used in the view for each request. By default, it simply contains the document title.
-You can add whatever you like to the view data array and return it for use in your views. For example, if we were fetching
-posts for a blog:
+You can add whatever you like to the view data array and return it for use in your views. For example, if we were
+fetching posts for a blog:
 
 ```php
   public function home(array $data = []): mixed
