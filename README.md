@@ -149,7 +149,7 @@ If you open your application's `config/bootstrap.php`, you should see the follow
 /*----------------------------------------
  | Register service providers             |
  ----------------------------------------*/
-$app = new Container();
+$app = new \Shiblati\Framework\Container();
 
 $app->register(new Shiblati\Framework\Providers\LogServiceProvider());
 $app->register(new Shiblati\Framework\Providers\DatabaseServiceProvider());
@@ -164,7 +164,7 @@ the underlying service implementations bound to the container.
 
 At a minimum, the following is needed to register an application service to the container.
 ```php
-public function register(Container $container): Container
+public function register(\Shiblati\Framework\Container $container): Container
 {
     $container['foo'] = new Foo();
     return $container;
@@ -181,7 +181,7 @@ new file  system loader, passing the path to the application's views, it then re
 variables  available throughout the templates, and finally, template extensions, before binding it to the container.
 
 ```php
-public function register(Container $container): Container
+public function register(\Shiblati\Framework\Container $container): Container
 {
     $loader = new FilesystemLoader($this->viewPath());
     $container['view'] = new Environment($loader, [
@@ -509,9 +509,9 @@ A standard controller may look like this:
 
 namespace MyApp\Controllers;
 
-use Shiblati\Request;
-use Shiblati\Response;
-use Shiblati\Container;
+use Shiblati\Framework\Request;
+use Shiblati\Framework\Response;
+use Shiblati\Framework\Container;
 use MyApp\Models\Blog;
 
 class BlogController extends Controller
