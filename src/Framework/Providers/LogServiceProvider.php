@@ -2,8 +2,9 @@
 
 namespace Shiblati\Framework\Providers;
 
-use Monolog\Logger;
 use JetBrains\PhpStorm\Pure;
+use Exception;
+use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Shiblati\Framework\Container;
 use Shiblati\Framework\ServiceProviderInterface;
@@ -16,9 +17,9 @@ class LogServiceProvider implements ServiceProviderInterface
 
         try {
             $container['log']->pushHandler(new StreamHandler(
-                $this->logPath(), Logger::DEBUG)
-            );
-        } catch (\Exception $e) {
+                $this->logPath() . $this->logFile(), Logger::DEBUG
+            ));
+        } catch (Exception $e) {
             return $e->getMessage();
         }
 
@@ -28,5 +29,10 @@ class LogServiceProvider implements ServiceProviderInterface
     #[Pure] private function logPath(): string
     {
         return getenv('APP_LOG_PATH');
+    }
+
+    #[Pure] private function logFile(): string
+    {
+        return getenv('APP_LOG_NAME') ?? 'app.log';
     }
 }

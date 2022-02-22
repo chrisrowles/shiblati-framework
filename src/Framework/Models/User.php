@@ -4,6 +4,7 @@ namespace Shiblati\Framework\Models;
 
 use Exception;
 use JetBrains\PhpStorm\ArrayShape;
+use Shiblati\Framework\Model;
 use Shiblati\Framework\Validators\UserCreateValidator;
 use Shiblati\Framework\Validators\UserLoginValidator;
 use Shiblati\Framework\Validators\UserUpdateValidator;
