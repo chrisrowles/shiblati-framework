@@ -13,23 +13,14 @@ use Shiblati\Framework\Extensions\Twig\SessionExtension;
 use Shiblati\Framework\Container;
 use Shiblati\Framework\ServiceProviderInterface;
 
-/**
- * Class ViewServiceProvider
- */
 class ViewServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * Register view service provider.
-     *
-     * @param Container $container
-     * @return Container
-     */
-    public function register(Container $container): Container
+    public function register(Container|\Pimple\Container $container): Container
     {
         $loader = new FilesystemLoader($this->viewPath());
         $container['view'] = new Environment($loader, [
-            'cache' => env('APP_CACHE') ? $this->cachePath() : false,
-            'debug' => env('APP_DEBUG'),
+            'cache' => getenv('APP_CACHE') ? $this->cachePath() : false,
+            'debug' => getenv('APP_DEBUG'),
         ]);
         $container['view']->addGlobal('session', $_SESSION);
         $container['view']->addGlobal('request', $_REQUEST);
@@ -43,23 +34,13 @@ class ViewServiceProvider implements ServiceProviderInterface
         return $container;
     }
 
-    /**
-     * Resolve view path.
-     *
-     * @return string
-     */
     #[Pure] private function viewPath(): string
     {
-        return env('APP_VIEW_PATH');
+        return getenv('APP_VIEW_PATH');
     }
 
-    /**
-     * Resolve cache path.
-     *
-     * @return string
-     */
     #[Pure] private function cachePath(): string
     {
-        return env('APP_CACHE_PATH');
+        return getenv('APP_CACHE_PATH');
     }
 }

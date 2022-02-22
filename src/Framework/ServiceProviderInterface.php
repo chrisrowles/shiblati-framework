@@ -2,7 +2,9 @@
 
 namespace Shiblati\Framework;
 
-interface ServiceProviderInterface
+use Shiblati\Framework\Container;
+
+interface ServiceProviderInterface extends \Pimple\ServiceProviderInterface
 {
-    public function register(Container $container);
+    public function register(\Pimple\Container $container);
 }

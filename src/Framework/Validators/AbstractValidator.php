@@ -10,8 +10,6 @@ abstract class AbstractValidator
     public array $validate;
 
     /**
-     * Validate post data.
-     *
      * @param mixed $data
      * @return bool
      * @throws Exception
