@@ -26,6 +26,7 @@ _**Sh**it **i** **b**ui**l**t **a** **t**h**i**ng_
 * [Controllers](#controllers)
   * [The Base Controller](#the-base-controller)
   * [Writing Controllers](#the-base-controller)
+* [License](#license)
 
 ## Server Requirements
 
@@ -540,5 +541,6 @@ class BlogController extends Controller
 }
 ```
 
----
-_...To be continued..._
+# License
+
+MIT License.
