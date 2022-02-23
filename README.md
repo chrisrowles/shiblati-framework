@@ -543,4 +543,4 @@ class BlogController extends Controller
 
 # License
 
-MIT License.
+[MIT License](https://github.com/chrisrowles/shiblati-framework/blob/main/LICENSE).
