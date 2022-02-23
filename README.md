@@ -509,10 +509,7 @@ A standard controller may look like this:
 
 namespace MyApp\Controllers;
 
-use Shiblati\Framework\Request;
-use Shiblati\Framework\Response;
-use Shiblati\Framework\Container;
-use MyApp\Models\Blog;
+use MyApp\Models\Blog;use Shiblati\Framework\Container;use Shiblati\Framework\Http\Request;use Shiblati\Framework\Response;
 
 class BlogController extends Controller
 {

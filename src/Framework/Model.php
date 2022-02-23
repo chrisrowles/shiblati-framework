@@ -1,8 +1,6 @@
 <?php
 
-namespace Shiblati\Framework\Models;
-
-use Shiblati\Framework\Container;
+namespace Shiblati\Framework;
 
 /**
  * Abstract Class Model

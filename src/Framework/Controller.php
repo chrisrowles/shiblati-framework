@@ -40,7 +40,7 @@ abstract class Controller
         $this->view = $container['view'];
         $this->session = $container['session'];
 
-        $this->data['title'] = getenv("APP_NAME");
+        $this->data['title'] = env("APP_NAME");
 
         $this->time();
     }

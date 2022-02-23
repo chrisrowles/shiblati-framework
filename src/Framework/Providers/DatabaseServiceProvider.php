@@ -12,10 +12,10 @@ class DatabaseServiceProvider implements ServiceProviderInterface
     public function register(Container|\Pimple\Container $container): Container
     {
         $config = Config::init()->set([
-            'host'     => getenv('DB_HOST'),
-            'database' => getenv('DB_NAME'),
-            'username' => getenv('DB_USER'),
-            'password' => getenv('DB_PASS')
+            'host'     => env('DB_HOST'),
+            'database' => env('DB_NAME'),
+            'username' => env('DB_USER'),
+            'password' => env('DB_PASS')
         ]);
 
         $container['db'] = new Database($config);

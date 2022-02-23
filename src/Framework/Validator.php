@@ -1,10 +1,10 @@
 <?php
 
-namespace Shiblati\Framework\Validators;
+namespace Shiblati\Framework;
 
 use Exception;
 
-abstract class AbstractValidator
+abstract class Validator
 {
     /** @var array  */
     public array $validate;

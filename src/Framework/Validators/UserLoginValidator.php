@@ -3,8 +3,9 @@
 namespace Shiblati\Framework\Validators;
 
 use Exception;
+use Shiblati\Framework\Validator;
 
-class UserLoginValidator extends AbstractValidator
+class UserLoginValidator extends Validator
 {
     /** @var string  */
     public string $username;

@@ -19,8 +19,8 @@ class ViewServiceProvider implements ServiceProviderInterface
     {
         $loader = new FilesystemLoader($this->viewPath());
         $container['view'] = new Environment($loader, [
-            'cache' => getenv('APP_CACHE') ? $this->cachePath() : false,
-            'debug' => getenv('APP_DEBUG'),
+            'cache' => env('APP_CACHE') ? $this->cachePath() : false,
+            'debug' => env('APP_DEBUG'),
         ]);
         $container['view']->addGlobal('session', $_SESSION);
         $container['view']->addGlobal('request', $_REQUEST);
@@ -36,11 +36,11 @@ class ViewServiceProvider implements ServiceProviderInterface
 
     #[Pure] private function viewPath(): string
     {
-        return getenv('APP_VIEW_PATH');
+        return env('APP_VIEW_PATH');
     }
 
     #[Pure] private function cachePath(): string
     {
-        return getenv('APP_CACHE_PATH');
+        return env('APP_CACHE_PATH');
     }
 }

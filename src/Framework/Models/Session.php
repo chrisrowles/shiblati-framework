@@ -3,6 +3,7 @@
 namespace Shiblati\Framework\Models;
 
 use Exception;
+use Shiblati\Framework\Model;
 
 
 class Session extends Model
