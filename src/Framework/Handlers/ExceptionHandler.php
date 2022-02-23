@@ -33,7 +33,7 @@ class ExceptionHandler
 
         $router->respond(function () use ($router) {
             $router->onHttpError(function ($code, $router) {
-                if (!getenv('APP_DEBUG')) {
+                if (!env('APP_DEBUG')) {
                     switch ($code) {
                         case self::HTTP_NOTFOUND:
                             $router->response()->body($this->view->render('error/404.twig'));
@@ -60,7 +60,7 @@ class ExceptionHandler
     {
         $this->log->error($exception->getMessage());
         echo $this->view->render('error/500.twig', [
-            'debug' => getenv('APP_DEBUG'),
+            'debug' => env('APP_DEBUG'),
             'error' => $exception->getMessage(),
             'trace' => ltrim($exception->getPrevious()->getTraceAsString())
         ]);

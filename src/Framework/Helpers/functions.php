@@ -10,7 +10,7 @@ if (!function_exists('env')) {
      */
     function env(string $key): string|array|bool|null
     {
-        $value = getenv($key);
+        $value = env($key);
 
         switch (strtolower($value)) {
             case 'true':

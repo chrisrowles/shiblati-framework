@@ -28,11 +28,11 @@ class LogServiceProvider implements ServiceProviderInterface
 
     #[Pure] private function logPath(): string
     {
-        return getenv('APP_LOG_PATH');
+        return env('APP_LOG_PATH');
     }
 
     #[Pure] private function logFile(): string
     {
-        return getenv('APP_LOG_NAME') ?? 'app.log';
+        return env('APP_LOG_NAME') ?? 'app.log';
     }
 }
