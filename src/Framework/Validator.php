@@ -3,11 +3,23 @@
 namespace Shiblati\Framework;
 
 use Exception;
+use Shiblati\Framework\Validators\ValidatorInterface;
 
-abstract class Validator
+abstract class Validator implements ValidatorInterface
 {
     /** @var array  */
     public array $validate;
+
+    /** @var mixed $_instance */
+    protected static mixed $instance;
+
+    public static function check(): mixed
+    {
+        $singleton = get_called_class();
+        self::$instance = new $singleton();
+
+        return self::$instance;
+    }
 
     /**
      * @param mixed $data

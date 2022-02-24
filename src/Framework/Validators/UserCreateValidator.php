@@ -5,7 +5,7 @@ namespace Shiblati\Framework\Validators;
 use Exception;
 use Shiblati\Framework\Validator;
 
-class UserCreateValidator extends Validator
+class UserCreateValidator extends Validator implements ValidatorInterface
 {
     /** @var string  */
     public string $email;
@@ -26,12 +26,14 @@ class UserCreateValidator extends Validator
     /**
      * @throws Exception
      */
-    public function __construct(mixed $params)
+    public function params(mixed $params): UserCreateValidator
     {
         $this->validate($params);
 
         $this->email = $params->email;
         $this->name = $params->name;
         $this->password = $params->password;
+
+        return $this;
     }
 }
