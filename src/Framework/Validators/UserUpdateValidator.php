@@ -31,7 +31,7 @@ class UserUpdateValidator extends Validator implements ValidatorInterface
         $this->validate($params);
 
         $this->id    = $params->id;
-        $this->email = $params->password;
+        $this->email = $params->email;
         $this->name  = $params->password;
 
         return $this;
