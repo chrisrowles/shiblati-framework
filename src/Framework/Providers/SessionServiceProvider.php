@@ -2,8 +2,8 @@
 
 namespace Shiblati\Framework\Providers;
 
-use Shiblati\Framework\Models\Session;
 use Shiblati\Framework\Container;
+use Shiblati\Framework\Models\Session;
 use Shiblati\Framework\ServiceProviderInterface;
 
 class SessionServiceProvider implements ServiceProviderInterface

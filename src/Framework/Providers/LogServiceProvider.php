@@ -2,10 +2,10 @@
 
 namespace Shiblati\Framework\Providers;
 
-use JetBrains\PhpStorm\Pure;
 use Exception;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use JetBrains\PhpStorm\Pure;
 use Shiblati\Framework\Container;
 use Shiblati\Framework\ServiceProviderInterface;
 

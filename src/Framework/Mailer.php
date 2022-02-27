@@ -2,6 +2,7 @@
 
 namespace Shiblati\Framework;
 
+use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use Shiblati\Framework\Config\MailerConfig;
@@ -18,7 +19,10 @@ class Mailer
             $this->mailer->isSMTP();
         }
 
-        $this->mailer->SMTPDebug  = $config->debug;
+        $this->mailer->SMTPDebug  = $config->debug
+            ? SMTP::DEBUG_SERVER
+            : SMTP::DEBUG_OFF;
+
         $this->mailer->SMTPAuth   = $config->auth;
         $this->mailer->SMTPSecure = $config->encryption;
 
